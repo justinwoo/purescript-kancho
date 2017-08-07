@@ -1,0 +1,23 @@
+{
+  "name": "purescript-kancho",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/justinwoo/purescript-kancho.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-typelevel-prelude": "^2.4.0",
+    "purescript-newtype": "^2.0.0",
+    "purescript-strings": "^3.3.1",
+    "purescript-foreign": "^4.0.1"
+  },
+  "devDependencies": {
+    "purescript-console": "^3.0.0"
+  }
+}
