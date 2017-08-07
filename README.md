@@ -11,6 +11,11 @@ Named for a nice Korean snack Kancho that wraps a chocolate core with biscuit.
 ## tl;dr
 
 ```purs
+type Coords =
+  { x :: Int
+  , y :: Int
+  }
+
 log <<< unsafeStringify $ toElmModel coords
   -- equivalent to JSON.stringify
   log <<< unsafeStringify $ toElmModel coords
