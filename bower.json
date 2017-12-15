@@ -12,12 +12,13 @@
     "output"
   ],
   "dependencies": {
-    "purescript-typelevel-prelude": "^2.4.0",
+    "purescript-typelevel-prelude": "^2.6.0",
     "purescript-newtype": "^2.0.0",
-    "purescript-strings": "^3.3.1",
+    "purescript-strings": "^3.3.2",
     "purescript-foreign": "^4.0.1"
   },
   "devDependencies": {
-    "purescript-console": "^3.0.0"
+    "purescript-console": "^3.0.0",
+    "purescript-node-fs-aff": "^5.0.0"
   }
 }

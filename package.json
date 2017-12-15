@@ -1,0 +1,26 @@
+{
+  "name": "purescript-kancho",
+  "version": "1.0.0",
+  "description": "A helper library for constraining types to be Elm port-safe and for providing helpers to codegen Elm types.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "elm-format": "^0.6.1-alpha"
+  },
+  "scripts": {
+    "test": "pulp test && elm-format --yes test/Generated.elm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinwoo/purescript-kancho.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justinwoo/purescript-kancho/issues"
+  },
+  "homepage": "https://github.com/justinwoo/purescript-kancho#readme"
+}

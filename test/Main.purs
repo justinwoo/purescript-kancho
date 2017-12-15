@@ -2,12 +2,14 @@ module Test.Main where
 
 import Prelude
 
+import Control.Monad.Aff (launchAff_)
 import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
+import Control.Monad.Eff.Console (log)
 import Data.Newtype (class Newtype)
 import Global.Unsafe (unsafeStringify)
-import Kancho (class HasElmPortVersion, toElmModel)
-import Kancho.Generate (class HasElmTypeRep, getElmRep)
+import Kancho (class HasElmPortVersion, getElmRep, toElmModel)
+import Node.Encoding (Encoding(..))
+import Node.FS.Aff (writeTextFile)
 import Type.Prelude (Proxy(..))
 
 -- Simple Record example
@@ -33,26 +35,27 @@ newtype Thing = Thing
 -- for newtype utilities
 derive instance newtypeThing :: Newtype Thing _
 
--- verifying that this is port safe by inspecting the inner element
--- though you can also get this by generating the code anyway and seeing if there's an error
-instance hasElmPortVersionThing ::
-  ( HasElmPortVersion rec
-  , Newtype Thing rec
-  ) => HasElmPortVersion Thing
-
 -- choose to short-circuit the inline generation with the name
-instance hasElmTypeRepThing :: HasElmTypeRep Thing where
-  toElmTypeRep _ _ = "Thing"
+instance hasElmPortVersionThing :: HasElmPortVersion Thing where
+  toElmTypeRep _ = "Thing"
 
-main :: forall e. Eff (console :: CONSOLE | e) Unit
-main = do
-  log <<< unsafeStringify $ toElmModel coords
-  log <<< unsafeStringify $ toElmModel etchSketch
-  log <<< unsafeStringify $ toElmModel thing
-  log ""
-  log $ "type Coords = " <> getElmRep (Proxy :: Proxy Coords)
-  log $ "type EtchSketch = " <> getElmRep (Proxy :: Proxy EtchSketch)
-  log $ "type Thing =  " <> getElmRep thingRecProxy
+jsonStringify :: forall a. a -> String
+jsonStringify = unsafeStringify
+
+main :: Eff _ Unit
+main = launchAff_ do
+  let
+    output =
+      "module Generated exposing (..)"
+      <> "\n"
+      <> "\n" <> "-- coords JS: " <> (jsonStringify $ toElmModel coords)
+      <> "\n" <> "-- etchSketch JS: "  <> (jsonStringify $ toElmModel etchSketch)
+      <> "\n" <> "-- thing JS: " <> (jsonStringify $ toElmModel thing)
+      <> "\n"
+      <> "\n" <> "type alias Coords = " <> getElmRep (Proxy :: Proxy Coords)
+      <> "\n" <> "type alias EtchSketch = " <> getElmRep (Proxy :: Proxy EtchSketch)
+      <> "\n" <> "type alias Thing =  " <> getElmRep thingRecProxy
+  writeTextFile UTF8 "./test/Generated.elm" output
   where
     coords :: Coords
     coords = {x: 1, y: 2}
@@ -68,6 +71,5 @@ main = do
     thingRecProxy :: forall rec
        . Newtype Thing rec
       => HasElmPortVersion rec
-      => HasElmTypeRep rec
       => Proxy rec
     thingRecProxy = Proxy
