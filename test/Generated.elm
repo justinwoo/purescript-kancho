@@ -12,20 +12,12 @@ type alias Coords =
 
 
 type alias EtchSketch =
-    { cursor :
-        { x : Int
-        , y : Int
-        }
-    , points :
-        List
-            { x : Int
-            , y : Int
-            }
+    { cursor : Coords
+    , points : List Coords
     }
 
 
 type alias Thing =
-    { a : Bool
-    , b : Float
-    , c : String
+    { x : Int
+    , y : Int
     }

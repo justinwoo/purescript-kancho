@@ -11,33 +11,33 @@ Named for a nice Korean snack Kancho that wraps a chocolate core with biscuit.
 ## tl;dr
 
 ```purs
-type Coords =
+newtype Coords = Coords
   { x :: Int
   , y :: Int
   }
+derive instance newtypeCoords :: Newtype Coords _
+instance hasElmPortVersionCoords :: HasElmPortVersion Coords where
+  toElmTypeRep _ = "Coords"
 
-log <<< unsafeStringify $ toElmModel coords
-  -- equivalent to JSON.stringify
-  log <<< unsafeStringify $ toElmModel coords
-  
-  -- uses getElmRep to get the Elm type representation of Coords
-  log $ "type Coords = " <> getElmRep (Proxy :: Proxy Coords)
-  -- (Proxy lets us not have to provide a concrete value for Coords)
-
-  where
-    coords :: Coords
-    coords = {x: 1, y: 2}
+type EtchSketch =
+  { cursor :: Coords
+  , points :: Array Coords
+  }
 ```
 
 outputs
 
-```
-{"x":1,"y":2}
+```elm
+type alias Coords =
+    { x : Int
+    , y : Int
+    }
 
-type Coords =
-  { x : Int
-  , y : Int
-  }
+
+type alias EtchSketch =
+    { cursor : Coords
+    , points : List Coords
+    }
 ```
 
 ## Example
