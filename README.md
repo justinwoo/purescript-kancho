@@ -48,4 +48,6 @@ The [tests](test/Main.purs) provide some examples to follow along with.
 
 The major chunk of this library is from work done for my [Elm-in-Halogen integration demo](https://github.com/justinwoo/purescript-halogen-elm-etch-sketch/) -- specifically on the [row-to-list-ver branch](https://github.com/justinwoo/purescript-halogen-elm-etch-sketch/tree/row-to-list-ver). The demo repo generates Elm types to a file and runs the Elm compiler in the full build, and uses port-safe types.
 
-A blog post about the Generics-Rep version is available [here](http://qiita.com/kimagure/items/d12525d42516f95dd541), but this library uses the newer `RowToList` 0.11.6 feature as a simpler way to constrain types.
+An updated blog post abou thte RowToList version is available [here](https://qiita.com/kimagure/items/09b24ed22cfc596248b4).
+
+A blog post about the old Generics-Rep version is available [here](http://qiita.com/kimagure/items/d12525d42516f95dd541).
