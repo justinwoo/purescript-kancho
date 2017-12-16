@@ -6,7 +6,7 @@ import Data.Foldable (intercalate)
 import Data.Foreign (Foreign)
 import Data.List (List, (:))
 import Data.Monoid (mempty)
-import Type.Prelude (class IsSymbol, class ListToRow, class RowToList, Proxy(..), SProxy(..), reflectSymbol)
+import Type.Prelude (class IsSymbol, class RowToList, Proxy(..), RLProxy(..), SProxy(..), reflectSymbol)
 import Type.Row (Cons, Nil, kind RowList)
 
 toElmModel :: forall a. HasElmPortVersion a => a -> a
@@ -43,34 +43,28 @@ instance hasElmPortVersionForeign :: HasElmPortVersion Foreign where
 
 instance hasElmPortVersionRecord ::
   ( RowToList fields fieldList
-  , CheckElmPortVersionFields fieldList
+  , HasElmPortVersionFields fieldList
   ) => HasElmPortVersion (Record fields) where
-  toElmTypeRep proxy =
-    "{ " <> contents <> "}"
+  toElmTypeRep _ =
+    "{" <> contents <> "}"
     where
-      contents = intercalate "\n, " $ extractFields proxy
+      contents = intercalate "\n  , " $ extractFields (RLProxy :: RLProxy fieldList)
 
 
-class CheckElmPortVersionFields (xs :: RowList) where
-  extractFields :: forall fields
-     . RowToList fields xs
-    => Proxy (Record fields)
-    -> List String
+class HasElmPortVersionFields (xs :: RowList) where
+  extractFields :: RLProxy xs -> List String
 
-instance checkElmPortVersionAndFieldsCons ::
+instance hasElmPortVersionAndFieldsCons ::
   ( IsSymbol name
   , HasElmPortVersion ty
-  , ListToRow tail tailRow
-  , CheckElmPortVersionFields tail
-  , RowToList tailRow tail
-  , CheckElmPortVersionFields tail
-  ) => CheckElmPortVersionFields (Cons name ty tail) where
+  , HasElmPortVersionFields tail
+  ) => HasElmPortVersionFields (Cons name ty tail) where
   extractFields _ = field : rest
     where
       name = reflectSymbol (SProxy :: SProxy name)
       tyName = toElmTypeRep (Proxy :: Proxy ty)
       field = name <> " : " <> tyName
-      rest = extractFields (Proxy :: Proxy (Record tailRow))
+      rest = extractFields (RLProxy :: RLProxy tail)
 
-instance checkElmPortVersionAndFieldsNil :: CheckElmPortVersionFields Nil where
+instance hasElmPortVersionAndFieldsNil :: HasElmPortVersionFields Nil where
   extractFields _ = mempty
