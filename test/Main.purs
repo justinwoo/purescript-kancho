@@ -2,8 +2,8 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Aff (launchAff_)
-import Control.Monad.Eff (Eff)
+import Effect.Aff (launchAff_)
+import Effect (Effect)
 import Data.Newtype (class Newtype)
 import Global.Unsafe (unsafeStringify)
 import Kancho (class HasElmPortVersion, getElmRep, toElmModel)
@@ -17,6 +17,7 @@ newtype Coords = Coords
   , y :: Int
   }
 derive instance newtypeCoords :: Newtype Coords _
+derive newtype instance showCoords :: Show Coords
 instance hasElmPortVersionCoords :: HasElmPortVersion Coords where
   toElmTypeRep _ = "Coords"
 
@@ -33,9 +34,9 @@ newtype Thing = Thing
   , b :: Number
   , c :: String
   }
-
 -- for newtype utilities
 derive instance newtypeThing :: Newtype Thing _
+derive newtype instance showThing :: Show Thing
 
 -- choose to short-circuit the inline generation with the name
 instance hasElmPortVersionThing :: HasElmPortVersion Thing where
@@ -44,15 +45,15 @@ instance hasElmPortVersionThing :: HasElmPortVersion Thing where
 jsonStringify :: forall a. a -> String
 jsonStringify = unsafeStringify
 
-main :: Eff _ Unit
+main :: Effect Unit
 main = launchAff_ do
   let
     output =
       "module Generated exposing (..)"
       <> "\n"
-      <> "\n" <> "-- coords JS: " <> (jsonStringify $ toElmModel coords)
-      <> "\n" <> "-- etchSketch JS: "  <> (jsonStringify $ toElmModel etchSketch)
-      <> "\n" <> "-- thing JS: " <> (jsonStringify $ toElmModel thing)
+      <> "\n" <> "-- coords JS: " <> (show $ toElmModel coords)
+      <> "\n" <> "-- etchSketch JS: "  <> (show $ toElmModel etchSketch)
+      <> "\n" <> "-- thing JS: " <> (show $ toElmModel thing)
       <> "\n"
       <> "\n" <> "type alias Coords = " <> getElmRep (newtypeInnerProxy $ Proxy :: Proxy Coords)
       <> "\n" <> "type alias EtchSketch = " <> getElmRep (Proxy :: Proxy EtchSketch)
