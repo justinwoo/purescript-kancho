@@ -1,4 +1,4 @@
-module Generated exposing (..)
+module Generated exposing (Coords, EtchSketch, Thing)
 
 -- coords JS: { x: 1, y: 2 }
 -- etchSketch JS: { cursor: { x: 1, y: 2 }, points: [] }
